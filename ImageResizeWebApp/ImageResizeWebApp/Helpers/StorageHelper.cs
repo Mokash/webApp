@@ -1,4 +1,4 @@
-﻿using Azure.Storage;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ImageResizeWebApp.Models;
@@ -16,12 +16,8 @@ namespace ImageResizeWebApp.Helpers
 
         public static bool IsImage(IFormFile file)
         {
-            if (file.ContentType.Contains("image"))
-            {
-                return true;
-            }
 
-            string[] formats = new string[] { ".jpg", ".png", ".gif", ".jpeg" };
+            string[] formats = new string[] { ".jpg", ".png", ".zip", ".jpeg", ".doc", ".pdf", ".xlsx", ".xls", ".docx", ".pptx", ".7z" };
 
             return formats.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
         }

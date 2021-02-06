@@ -40,8 +40,6 @@ namespace ImageResizeWebApp.Controllers
 
                 foreach (var formFile in files)
                 {
-                    if (StorageHelper.IsImage(formFile))
-                    {
                         if (formFile.Length > 0)
                         {
                             using (Stream stream = formFile.OpenReadStream())
@@ -49,11 +47,6 @@ namespace ImageResizeWebApp.Controllers
                                 isUploaded = await StorageHelper.UploadFileToStorage(stream, formFile.FileName, storageConfig);
                             }
                         }
-                    }
-                    else
-                    {
-                        return new UnsupportedMediaTypeResult();
-                    }
                 }
 
                 if (isUploaded)
@@ -65,27 +58,6 @@ namespace ImageResizeWebApp.Controllers
                 }
                 else
                     return BadRequest("Look like the image couldnt upload to the storage");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        // GET /api/images/thumbnails
-        [HttpGet("thumbnails")]
-        public async Task<IActionResult> GetThumbNails()
-        {
-            try
-            {
-                if (storageConfig.AccountKey == string.Empty || storageConfig.AccountName == string.Empty)
-                    return BadRequest("Sorry, can't retrieve your Azure storage details from appsettings.js, make sure that you add Azure storage details there.");
-
-                if (storageConfig.ImageContainer == string.Empty)
-                    return BadRequest("Please provide a name for your image container in Azure blob storage.");
-
-                List<string> thumbnailUrls = await StorageHelper.GetThumbNailUrls(storageConfig);
-                return new ObjectResult(thumbnailUrls);            
             }
             catch (Exception ex)
             {
